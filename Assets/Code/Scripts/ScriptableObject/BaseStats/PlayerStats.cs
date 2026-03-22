@@ -14,6 +14,8 @@ public class PlayerStats : ScriptableObject
 	public float maxHP;
 	[Header("대쉬 속도")]
 	public float dashSpeed;
+	[Header("대쉬 시간")]
+	public float dashDuration;
 	[Header("무적 시간")]
 	public float invincibilityDuration;
 }

@@ -15,6 +15,8 @@ public class PlayerStatsRuntime
 	public float currentHP;
 	[Header("대쉬 속도")]
 	public float dashSpeed;
+	[Header("대쉬 시간")]
+	public float dashDuration;
 	[Header("무적 시간")]
 	public float invincibilityDuration;
 
@@ -27,6 +29,7 @@ public class PlayerStatsRuntime
 		maxHP = baseStats.maxHP;
 		currentHP = maxHP;
 		dashSpeed = baseStats.dashSpeed;
+		dashDuration = baseStats.dashDuration;
 		invincibilityDuration = baseStats.invincibilityDuration;
 	}
 }

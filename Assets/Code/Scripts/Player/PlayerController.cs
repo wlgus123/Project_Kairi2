@@ -11,13 +11,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// 플레이어 정보
 	private Rigidbody2D rigid;
 	private SpriteRenderer sprite;
-	private bool isGrounded;        // 땅 여부
-	private bool isUsedDash;        // 대쉬 사용 여부
-	private PlayerState state;      // 플레이어 상태
+	private bool isGrounded;	// 땅 여부
+	private bool isDash;        // 대쉬 사용 여부
+	private PlayerState state;  // 플레이어 상태
 
 	// 이동
-	private Vector2 inputVec;           // 입력된 플레이어 이동값 (-1, 0, 1)
-	private float speed;                // 플레이어 이동 속도
+	private Vector2 inputVec;   // 입력된 플레이어 이동값 (-1, 0, 1)
+	private float speed;        // 플레이어 이동 속도
+	private float dashTime;		// 대쉬 지속 시간
 
 	// 땅 체크
 	[SerializeField] private Transform groundCheckObj;      // 땅 체크 오브젝트 (프리펩)
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void Start()
 	{
 		isGrounded = true;
-		isUsedDash = false;
+		isDash = false;
 		state = PlayerState.Idle;
 		speed = GameManager.Instance.playerStatsRuntime.speed;
 	}
@@ -51,6 +52,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void FixedUpdate()
 	{
 		rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
+
+		if(dashTime <= 0)
+		{
+			speed = GameManager.Instance.playerStatsRuntime.speed;
+			if (isDash)
+				dashTime = GameManager.Instance.playerStatsRuntime.dashDuration;
+		}
+		else
+		{
+			dashTime -= Time.deltaTime;
+			speed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+		}
+		isDash = false;
 	}
 
 	private void Update()
@@ -97,7 +111,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// </summary>
 	void OnMove(InputValue val)     // 좌우 이동 (AD)
 	{
-		if (isUsedDash) return;     // 대쉬 사용 중일 경우 리턴
+		if (isDash) return;     // 대쉬 사용 중일 경우 리턴
 		inputVec = val.Get<Vector2>();
 	}
 
@@ -111,29 +125,29 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	void OnCrouch(InputValue val)   // 구르기/대쉬/내려가기 (S)
 	{
-		if (isUsedDash) return;     // 대쉬 사용 중일 경우 리턴
-		StartCoroutine(PlayerDash());   // 대쉬 코루틴 시작
+		if (isDash) return;     // 대쉬 사용 중일 경우 리턴
+		isDash = true;
 	}
 
 	/// <summary>
 	/// Coroutine
 	/// </summary>
-	IEnumerator PlayerDash()    // 플레이어 대쉬
-	{
-		float originalGravity = rigid.gravityScale;     // 원래 이동 속도 저장
-		isUsedDash = true;
-		rigid.linearVelocity = new Vector2(inputVec.x * GameManager.Instance.playerStatsRuntime.dashSpeed, 0f);
-		// 정해진 무적 시간만큼 기다리기
-		yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.invincibilityDuration);
-		isUsedDash = false;
-	}
+	//IEnumerator PlayerDash()    // 플레이어 대쉬
+	//{
+	//	float originalGravity = rigid.gravityScale;     // 원래 이동 속도 저장
+	//	isDash = true;
+	//	rigid.linearVelocity = new Vector2(inputVec.x * GameManager.Instance.playerStatsRuntime.dashSpeed, 0f);
+	//	// 정해진 무적 시간만큼 기다리기
+	//	yield return new WaitForSeconds(GameManager.Instance.playerStatsRuntime.invincibilityDuration);
+	//	isDash = false;
+	//}
 
 	/// <summary>
 	/// Interface
 	/// </summary>
 	public void TakeDamage(int attack)  // 데미지
 	{
-		if (isUsedDash) return;   // 무적일 경우 리턴
+		if (isDash) return;   // 무적일 경우 리턴
 
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;    // 체력 감소
 

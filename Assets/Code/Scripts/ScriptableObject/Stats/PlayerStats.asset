@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
   speed: 10.5
-  jumpForce: 15
+  jumpForce: 12
   attack: 999
   maxHP: 5
   dashSpeed: 30
-  invincibilityDuration: 0.5
+  dashDuration: 0.1
+  invincibilityDuration: 0.2
