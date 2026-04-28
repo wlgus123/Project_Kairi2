@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-	public Rigidbody2D _rb;
+	[HideInInspector] public Rigidbody2D _rb;
 	public Dictionary<EnemyState, IEnemyState> _stateList;
 	private EnemyState _enemyState;
 

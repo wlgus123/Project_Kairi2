@@ -1,4 +1,5 @@
 using EnumType;
+using Globals;
 using UnityEngine;
 
 public class EnemyAttack : IEnemyState
@@ -6,13 +7,27 @@ public class EnemyAttack : IEnemyState
 	public void EnterState(Enemy p_enemy)
 	{
 		Debug.Log("Enter Attack");
+
+		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.Attack);	// 애니메이션 플레이
 	}
 
 	public void UpdateState(Enemy p_enemy)
 	{
 		Debug.Log("Attaking...");
 
-		p_enemy.ChangStateDebug(EnemyState.PATROL);
+		AnimatorStateInfo stateInfo = p_enemy.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+
+		// 공격 끝났을 경우 (애니메이션 끝)
+		if(!stateInfo.IsName(EnemyAnimName.Attack))
+		{
+			// 플레이어가 시야 내에 있을 경우 추적
+			if (p_enemy.GetComponent<EnemySight>().IsPlayerInRange())
+				p_enemy.ChangeState(EnemyState.CHASE);
+			else	// 아닐 경우 기본 상태로 변경
+				p_enemy.ChangeState(EnemyState.IDLE);
+
+			return;
+		}
 	}
 
 	public void ExitState(Enemy p_enemy)
