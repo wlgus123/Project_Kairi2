@@ -4,10 +4,10 @@ using UnityEngine;
 public class EnemyStatsRuntime
 {
 	[Header("적 기본 스탯")]
-	[Header("이동 속도")]
-	public float MoveSpeed;
-	[Header("플레이어 추격 속도")]
+	[Header("정찰 속도")]
 	public float PatrolSpeed;
+	[Header("플레이어 추격 속도")]
+	public float ChaseSpeed;
 	[Header("공격력")]
 	public float Attack;
 	[Header("체력")]
@@ -17,7 +17,7 @@ public class EnemyStatsRuntime
 	// 생성자
 	public EnemyStatsRuntime(EnemyStats baseStats)
 	{
-		MoveSpeed = baseStats.PatrolSpeed;
+		PatrolSpeed = baseStats.PatrolSpeed;
 		PatrolSpeed = baseStats.ChaseSpeed;
 		Attack = baseStats.Attack;
 		MaxHP = baseStats.HP;

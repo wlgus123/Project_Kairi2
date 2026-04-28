@@ -11,7 +11,7 @@ public class EnemyIdle : IEnemyState
 	public void EnterState(Enemy p_enemy)
 	{
 		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.Idle);      // 애니메이션 실행
-		_idleTime = Random.Range(3f, 5f);	// 랜덤 값 지정
+		_idleTime = Random.Range(3f, 4f);	// 랜덤 값 지정
 		_timer = 0f;
 
 		Debug.Log($"Enter Idle (idleTime: {_idleTime})");

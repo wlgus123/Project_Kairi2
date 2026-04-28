@@ -13,7 +13,7 @@ public class EnemyPatrol : IEnemyState
 		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.Patrol);	// 애니메이션 지정
 		_isPatrolling = false;
 		_moveTimer = 0f;
-		_moveTime = Random.Range(2f, 4f);   // 움직일 시간 랜덤 지정
+		_moveTime = Random.Range(2f, 3f);   // 움직일 시간 랜덤 지정
 
 		Debug.Log($"Enter Patrol (moveTime: {_moveTime})");
 	}

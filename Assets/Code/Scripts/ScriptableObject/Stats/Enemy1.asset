@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyName: Test Enemy1
   EnemyDescription: Test Enemy1's Description
-  PatrolSpeed: 3
+  PatrolSpeed: 1.5
   ChaseSpeed: 8
   Attack: 10
   HP: 1000

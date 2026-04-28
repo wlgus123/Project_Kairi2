@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
   speed: 10.5
-  jumpForce: 12
+  jumpForce: 15
   attack: 999
   attackCoolTime: 0.5
   maxHP: 5
