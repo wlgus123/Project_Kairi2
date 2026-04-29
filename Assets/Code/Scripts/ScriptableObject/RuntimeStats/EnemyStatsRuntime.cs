@@ -10,6 +10,8 @@ public class EnemyStatsRuntime
 	public float PatrolSpeed;
 	[Header("플레이어 추격 속도")]
 	public float ChaseSpeed;
+	[Header("근접 시야 범위")]
+	public float SightRoundRange;
 	[Header("시야 범위")]
 	public float SIghtRange;
 	[Header("공격력")]
@@ -26,6 +28,7 @@ public class EnemyStatsRuntime
 		MoveSpeed = baseStats.MoveSpeed;
 		PatrolSpeed = baseStats.PatrolSpeed;
 		ChaseSpeed = baseStats.ChaseSpeed;
+		SightRoundRange = baseStats.SightRoundRange;
 		SIghtRange = baseStats.SightRange;
 		Attack = baseStats.Attack;
 		AttackRange = baseStats.AttackRange;

@@ -17,6 +17,8 @@ public class EnemyStats : ScriptableObject
 	public float PatrolSpeed;
 	[Header("플레이어 추격 속도")]
 	public float ChaseSpeed;
+	[Header("근접 시야 범위")]
+	public float SightRoundRange;
 	[Header("시야 범위")]
 	public float SightRange;
 	[Header("공격력")]

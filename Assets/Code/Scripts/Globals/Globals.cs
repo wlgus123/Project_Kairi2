@@ -29,6 +29,12 @@ namespace Globals
 		public static readonly string cameraBound = "CameraBound";
 	}
 
+	public static class LayerName
+	{
+		public static readonly string player = "Player";
+		public static readonly string enemy = "Enemy";
+	}
+
 	// 적 관련 데이터
 	public static class EnemyData
 	{
@@ -44,5 +50,6 @@ namespace Globals
 		public static readonly string Chase = "Enemy_Run";
 		public static readonly string Attack = "Enemy_Shot1";
 		public static readonly string Patrol = "Enemy_Walk";
+		public static readonly string Recharge = "Enemy_Recharge";
 	}
 }

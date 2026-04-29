@@ -10,7 +10,7 @@ public class EnemyChase : IEnemyState
 	{
 		Debug.Log("Enter Chase");
 
-		p_enemy.GetComponent<Animation>().Play(EnemyAnimName.Chase);    // 탐색 애니메이션
+		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.Chase);    // 탐색 애니메이션
 		_chaseTime = 0f;
 	}
 
@@ -35,7 +35,8 @@ public class EnemyChase : IEnemyState
 
 		if(_player != null)
 		{
-			Vector2 dir = (_player.position - p_enemy.transform.position).normalized;	// 플레이어 방향
+			Vector2 dir = (_player.position - p_enemy.transform.position).normalized;   // 플레이어 방향
+
 			// 추적 속도만큼 이동
 			p_enemy._rb.linearVelocity = new Vector2(dir.x * p_enemy.GetComponent<EnemyDataManager>()._enemyStats.ChaseSpeed, 0f);
 
@@ -56,6 +57,7 @@ public class EnemyChase : IEnemyState
 			}
 		}
 	}
+
 	public void ExitState(Enemy p_enemy)
 	{
 		Debug.Log("Exit Chase");
