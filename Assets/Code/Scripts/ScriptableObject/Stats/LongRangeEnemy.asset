@@ -19,6 +19,6 @@ MonoBehaviour:
   ChaseSpeed: 7
   SightRoundRange: 2
   SightRange: 999
-  Attack: 10
+  Attack: 1
   AttackRange: 5
-  HP: 1000
+  HP: 1

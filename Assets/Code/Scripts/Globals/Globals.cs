@@ -52,4 +52,10 @@ namespace Globals
 		public static readonly string Patrol = "Enemy_Walk";
 		public static readonly string Recharge = "Enemy_Recharge";
 	}
+	public static class PlayerAnimName   // 플레이어
+	{
+		public static readonly string Idle = "Idle";
+		public static readonly string Chase = "Run";
+		public static readonly string Attack = "Attack";
+	}
 }
