@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 	private PlayerAttack attack;
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
+	private PlayerClimb climb;
 	private float originalGravity;
 
 	private void Awake()
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
 		dash = GetComponent<PlayerDash>();
 		attack = GetComponent<PlayerAttack>();
 		slowMode = GetComponent<PlayerSlowMode>();
+		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 	}
 
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!dash.isDashing)
 			movement.HandleMovement();
+
 		movement.UpdateSprite();
 	}
 
@@ -45,13 +48,15 @@ public class PlayerController : MonoBehaviour
 
 	private void OnMove(InputValue val)
 	{
+		if (climb.isWallJump) return;	// 벽에서 점프 중일 경우 이동 X
 		if (dash.isDashing)
 		{
 			movement.inputVec = Vector2.zero;
 			return;
 		}
-		movement.inputVec = val.Get<Vector2>();
+
 		animator.Play(PlayerAnimName.run);
+		movement.inputVec = val.Get<Vector2>();
 		dash.TryDash();
 	}
 
@@ -64,8 +69,13 @@ public class PlayerController : MonoBehaviour
 	private void OnJump(InputValue val)
 	{
 		if (!groundChecker.isGrounded) return;
+		if (climb.isWall)
+		{
+			climb.WallJump();
+			return;
+		}
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
-		groundChecker.SetGrounded(false);
+		groundChecker.isGrounded = false;
 	}
 
 	private void OnCrouch()
@@ -106,11 +116,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D col)
 	{
-		groundChecker.Check();		// 땅 체크
-	}
-	private void OnCollisionStay2D(Collision2D col)
-	{
-		groundChecker.Check();
+		groundChecker.Check();      // 땅 체크
 
 		// 문 열기
 		if (col.transform.CompareTag(TagName.door))
@@ -125,11 +131,15 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+	private void OnCollisionStay2D(Collision2D col)
+	{
+		groundChecker.Check();      // 땅 체크
+	}
 
 	private void OnCollisionExit2D(Collision2D col)
 	{
 		if (col.transform.CompareTag(TagName.ground))
-			groundChecker.SetGrounded(false);
+			groundChecker.isGrounded = false;
 	}
 
 	private void OnTriggerEnter2D(Collider2D col)

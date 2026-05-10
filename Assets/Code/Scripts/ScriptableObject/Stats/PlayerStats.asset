@@ -22,3 +22,6 @@ MonoBehaviour:
   dashDist: 10
   dashDuration: 0.5
   invincibilityDuration: 0.5
+  wallChkDist: 0.2
+  climbSlidingSpeed: 0.5
+  wallJumpPower: 25

@@ -48,7 +48,7 @@ public class PlayerAttack : MonoBehaviour
 		CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
 		LayerMask mask = ~LayerMask.GetMask(LayerName.player);
 		RaycastHit2D hit = Physics2D.CapsuleCast(startPos, col.size,
-			CapsuleDirection2D.Vertical, 0f, dir, stats.attackDist + 0.5f, mask);
+		CapsuleDirection2D.Vertical, 0f, dir, stats.attackDist + 0.5f, mask);
 
 		if (hit)
 		{

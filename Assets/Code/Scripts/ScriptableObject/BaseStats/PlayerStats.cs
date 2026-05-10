@@ -24,4 +24,10 @@ public class PlayerStats : ScriptableObject
 	public float dashDuration;
 	[Header("무적 시간")]
 	public float invincibilityDuration;
+	[Header("벽 체크 거리")]
+	public float wallChkDist;
+	[Header("벽에서 내려가는 속도")]
+	public float climbSlidingSpeed;
+	[Header("벽 점프 속도")]
+	public float wallJumpPower;
 }
