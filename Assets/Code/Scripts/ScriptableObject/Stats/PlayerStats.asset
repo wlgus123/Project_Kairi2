@@ -15,13 +15,13 @@ MonoBehaviour:
   speed: 10.5
   jumpForce: 12
   attack: 1
-  attackDist: 0
+  attackDuration: 0.2
+  attackDist: 3
   attackCoolTime: 0.3
-  attackSpeed: 0
   maxHP: 1
   dashDist: 10
   dashDuration: 0.5
   invincibilityDuration: 0.5
   wallChkDist: 0.2
   climbSlidingSpeed: 0.5
-  wallJumpPower: 40
+  wallJumpPower: 30

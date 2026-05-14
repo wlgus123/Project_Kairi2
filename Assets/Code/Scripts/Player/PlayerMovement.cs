@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rigid;
     private float maxSpeed;
 
-
     public Vector2 inputVec;
 
     private void Awake()
@@ -36,13 +35,26 @@ public class PlayerMovement : MonoBehaviour
 
     public void UpdateSprite()
     {
+        // 방향 전환
         if (inputVec.x > 0) transform.eulerAngles = Vector3.zero;
         else if (inputVec.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+
+        // x축 고정
+        if (inputVec.x == 0)
+            rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        else
+            rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     public void UpdateSprite(Vector2 dir)
     {
         if (dir.x > 0) transform.eulerAngles = Vector3.zero;
         else if (dir.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+    }
+
+    // 언덕 체크
+    public void SlopeChk(RaycastHit2D hit)
+    {
+        
     }
 }

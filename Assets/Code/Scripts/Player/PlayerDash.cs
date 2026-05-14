@@ -63,7 +63,10 @@ public class PlayerDash : MonoBehaviour
 		else
 		{
 			isDashReady = false;
-			animator.Play(PlayerAnimName.idle);
+			if (movement.inputVec.x == 0)
+				animator.Play(PlayerAnimName.idle);
+			else
+				animator.Play(PlayerAnimName.run);
 		}
 	}
 }

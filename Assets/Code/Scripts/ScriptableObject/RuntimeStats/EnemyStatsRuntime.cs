@@ -14,7 +14,9 @@ public class EnemyStatsRuntime
 	public float SightRoundRange;
 	[Header("시야 범위")]
 	public float SIghtRange;
-	[Header("공격력")]
+    [Header("발견 시 추격/공격 쿨타임")]
+    public float FindCoolTime;
+    [Header("공격력")]
 	public int Attack;
 	[Header("공격 범위")]
 	public float AttackRange;
@@ -30,7 +32,8 @@ public class EnemyStatsRuntime
 		ChaseSpeed = baseStats.ChaseSpeed;
 		SightRoundRange = baseStats.SightRoundRange;
 		SIghtRange = baseStats.SightRange;
-		Attack = baseStats.Attack;
+        FindCoolTime = baseStats.FindCoolTime;
+        Attack = baseStats.Attack;
 		AttackRange = baseStats.AttackRange;
 		MaxHP = baseStats.HP;
 		CurrentHP = MaxHP;

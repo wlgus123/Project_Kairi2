@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
 		if (!groundChecker.isGrounded) return;
 		dash.isDashReady = true;
 		animator.Play(PlayerAnimName.landDown);
-		if (groundChecker.isGroundedSpecial)
+		if (groundChecker.isGroundedOneway)
 			transform.position += Vector3.down * 0.1f;
 		else
 			dash.TryDash();
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D col)
 	{
-		groundChecker.Check();      // 땅 체크
+		groundChecker.CheckGround();      // 땅 체크
 
 		// 문 열기
 		if (col.transform.CompareTag(TagName.door))
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
 	}
 	private void OnCollisionStay2D(Collision2D col)
 	{
-		groundChecker.Check();      // 땅 체크
+		groundChecker.CheckGround();      // 땅 체크
 	}
 
 	private void OnCollisionExit2D(Collision2D col)

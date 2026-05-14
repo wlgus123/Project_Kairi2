@@ -4,19 +4,21 @@ using UnityEngine;
 public class PlayerStatsRuntime
 {
 	[Header("플레이어 기본 스텟")]
-	[Header("이동속도")]
-	public float speed;
-	[Header("점프 높이")]
-	public float jumpForce;
-	[Header("공격 대쉬 사거리")]
-	public float attackDist;
-	[Header("공격력")]
-	public int attack;
-	[Header("공격 쿨타임")]
-	public float attackCoolTime;
-	[Header("공격 속도")]
-	public float attackSpeed;
-	[Header("체력")]
+    [Header("이동속도")]
+    public float speed;
+    [Header("점프 높이")]
+    public float jumpForce;
+    [Header("공격력")]
+    public int attack;
+    [Header("공격 시간")]
+    public float attackDuration;
+    [Header("공격 대쉬 사거리")]
+    public float attackDist;
+    [Header("공격 쿨타임")]
+    public float attackCoolTime;
+    //[Header("공격 속도")]
+    //public float attackSpeed;
+    [Header("체력")]
 	public float maxHP;
 	public float currentHP;
 	[Header("대쉬 사거리")]
@@ -38,9 +40,10 @@ public class PlayerStatsRuntime
 		speed = baseStats.speed;
 		jumpForce = baseStats.jumpForce;
 		attack = baseStats.attack;
-		attackDist = baseStats.attackDist;
+        attackDuration = baseStats.attackDuration;
+        attackDist = baseStats.attackDist;
 		attackCoolTime = baseStats.attackCoolTime;
-		attackSpeed = baseStats.attackSpeed;
+		//attackSpeed = baseStats.attackSpeed;
 		maxHP = baseStats.maxHP;
 		currentHP = maxHP;
 		dashDist = baseStats.dashDist;

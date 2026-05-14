@@ -16,8 +16,8 @@ public class EnemyLongRangeAttack : IEnemyState
 
 	public void UpdateState(Enemy p_enemy)
 	{
-		// 공격
-		shootTimer += Time.deltaTime;
+        // 공격
+        shootTimer += Time.deltaTime;
 
 		if (shootTimer >= shootTime)
 		{
