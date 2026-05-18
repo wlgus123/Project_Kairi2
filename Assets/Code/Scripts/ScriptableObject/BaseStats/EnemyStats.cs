@@ -21,6 +21,8 @@ public class EnemyStats : ScriptableObject
 	public float SightRoundRange;
 	[Header("시야 범위")]
 	public float SightRange;
+	[Header("발견 시 추격/공격 쿨타임")]
+	public float FindCoolTime;
 	[Header("공격력")]
 	public int Attack;
 	[Header("공격 범위")]

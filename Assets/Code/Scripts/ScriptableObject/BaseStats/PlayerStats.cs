@@ -10,9 +10,11 @@ public class PlayerStats : ScriptableObject
 	public float jumpForce;
 	[Header("공격력")]
 	public int attack;
-	[Header("공격 대쉬 사거리")]
-	public float attackDist;
-	[Header("공격 쿨타임")]
+    [Header("공격 시간")]
+    public float attackDuration;
+    [Header("공격 대쉬 사거리")]
+    public float attackDist;
+    [Header("공격 쿨타임")]
 	public float attackCoolTime;
 	[Header("공격 속도")]
 	public float attackSpeed;
@@ -28,6 +30,6 @@ public class PlayerStats : ScriptableObject
 	public float wallChkDist;
 	[Header("벽에서 내려가는 속도")]
 	public float climbSlidingSpeed;
-	[Header("벽 점프 속도")]
+	[Header("벽 점프 높이")]
 	public float wallJumpPower;
 }

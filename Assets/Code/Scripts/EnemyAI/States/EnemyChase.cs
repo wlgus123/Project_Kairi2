@@ -1,6 +1,7 @@
 using EnumType;
 using Globals;
 using UnityEngine;
+using System.Collections;
 
 public class EnemyChase : IEnemyState
 {
@@ -8,9 +9,10 @@ public class EnemyChase : IEnemyState
 	float _chaseTimer = 0f;		// 시도한 시간
 	public void EnterState(Enemy p_enemy)
 	{
-		Debug.Log("Enter Chase");
+		Debug.Log($"Enter Chase ({p_enemy.GetComponentInChildren<FindBangUI>()})");
+		DelayAttack(p_enemy);	// 발견
 
-		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.chase);    // 탐색 애니메이션
+        p_enemy.GetComponent<Animator>().Play(EnemyAnimName.chase);    // 탐색 애니메이션
 		_chaseTime = 0f;
 	}
 
@@ -59,5 +61,16 @@ public class EnemyChase : IEnemyState
 	{
 		Debug.Log("Exit Chase");
 	}
+
+
+    private IEnumerator DelayAttack(Enemy p_enemy)
+    {
+		Debug.Log($"start Attack CoolTime");
+        p_enemy.GetComponentInChildren<FindBangUI>().VisibleUI();
+        // 쿨타임만큼 대기
+        yield return new WaitForSeconds(p_enemy.GetComponent<EnemyDataManager>()._enemyStats.FindCoolTime);
+		Debug.Log($"end Attack CoolTime");
+        p_enemy.GetComponentInChildren<FindBangUI>().DisableUI();
+    }
 
 }

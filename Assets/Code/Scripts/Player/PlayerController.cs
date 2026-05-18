@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
 		if (!dash.isDashing)
 			movement.HandleMovement();
 
-		movement.UpdateSprite();
+		if(!climb.isWallJump)
+			movement.UpdateSprite();
 	}
 
 	private void Update()
@@ -67,13 +68,14 @@ public class PlayerController : MonoBehaviour
 	}
 
 	private void OnJump(InputValue val)
-	{
-		if (!groundChecker.isGrounded) return;
-		if (climb.isWall)
-		{
-			climb.WallJump();
-			return;
-		}
+    {
+        if (climb.isWall)
+        {
+            climb.WallJump();
+            return;
+        }
+        if (!groundChecker.isGrounded) return;
+
 		rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
 		groundChecker.isGrounded = false;
 	}
@@ -83,7 +85,7 @@ public class PlayerController : MonoBehaviour
 		if (!groundChecker.isGrounded) return;
 		dash.isDashReady = true;
 		animator.Play(PlayerAnimName.landDown);
-		if (groundChecker.isGroundedSpecial)
+		if (groundChecker.isGroundedOneway)
 			transform.position += Vector3.down * 0.1f;
 		else
 			dash.TryDash();
@@ -98,8 +100,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnAttack(InputValue val)
 	{
-		Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		attack.TryAttack(mouseWorld);
+		attack.TryAttack();
 	}
 
 	private void OnSlow(InputValue val)
@@ -116,7 +117,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D col)
 	{
-		groundChecker.Check();      // 땅 체크
+		groundChecker.CheckGround();      // 땅 체크
 
 		// 문 열기
 		if (col.transform.CompareTag(TagName.door))
@@ -133,7 +134,7 @@ public class PlayerController : MonoBehaviour
 	}
 	private void OnCollisionStay2D(Collision2D col)
 	{
-		groundChecker.Check();      // 땅 체크
+		groundChecker.CheckGround();      // 땅 체크
 	}
 
 	private void OnCollisionExit2D(Collision2D col)
@@ -144,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D col)
 	{
-		if (attack.CanDeflect() && col.CompareTag(TagName.bullet))
+		if (/*attack.CanDeflect() && */col.CompareTag(TagName.bullet))
 			col.GetComponent<EnemyBullet>().DeflectBullet();
 	}
 }

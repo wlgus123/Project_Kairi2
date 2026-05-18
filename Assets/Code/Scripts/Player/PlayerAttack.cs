@@ -1,95 +1,139 @@
 using Globals;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerAttack : MonoBehaviour
 {
-	public bool IsAttacking { get; private set; }
-
 	private Rigidbody2D rigid;
-	private Animator animator;
-	private PlayerMovement movement;
-	private PlayerDash dash;
-	private float originalGravity;
+	private PlayerStatsRuntime stats;
+	private Camera mainCam;
+	private float attackTimer;
+
+	public bool isAttack;
 
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
-		animator = GetComponent<Animator>();
-		movement = GetComponent<PlayerMovement>();
-		dash = GetComponent<PlayerDash>();
 	}
 
-	public void TryAttack(Vector2 target)
+	private void Update()
 	{
-		if (IsAttacking) return;
-		StartCoroutine(AttackRoutine(target));
+		mainCam = Camera.main;
+		stats = GameManager.Instance.playerStatsRuntime;
 	}
 
-	public bool CanDeflect() => IsAttacking;
-
-	private IEnumerator AttackRoutine(Vector2 target)
+	public void TryAttack()
 	{
-		IsAttacking = true;
-		dash.enabled = false;   // 공격 중 대쉬 잠금
+		StartCoroutine(Attack());
+	}
 
-		animator.Play(PlayerAnimName.attack);
-		originalGravity = rigid.gravityScale;
-		rigid.gravityScale = 0f;
-
-		var stats = GameManager.Instance.playerStatsRuntime;
+	private IEnumerator Attack()
+	{
 		Vector2 startPos = transform.position;
-		Vector2 dir = (target - startPos).normalized;
-		movement.UpdateSprite(dir);
+		Vector2 currPos = startPos;
+		Vector2 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 dir = (mousePos - startPos).normalized;
+		Vector2 targetPos = startPos + dir * stats.attackDist;
 
-		Vector2 endPos = startPos;
-
-		// CapsuleCast로 충돌 검사
-		CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
 		LayerMask mask = ~LayerMask.GetMask(LayerName.player);
-		RaycastHit2D hit = Physics2D.CapsuleCast(startPos, col.size,
-		CapsuleDirection2D.Vertical, 0f, dir, stats.attackDist + 0.5f, mask);
+		Vector2 boxSize = Vector2.Scale(GetComponent<BoxCollider2D>().size, transform.lossyScale);
+		RaycastHit2D hit = Physics2D.BoxCast(
+			transform.position,
+			boxSize,
+			transform.eulerAngles.z,
+			dir,
+			stats.attackDist,
+			mask
+		);
+
+		isAttack = true;
 
 		if (hit)
 		{
-			if (hit.transform.CompareTag(TagName.ground))
-				endPos = startPos + dir * (hit.distance - 0.1f);
-			else if (hit.transform.CompareTag(TagName.crackObj)
-				  || hit.transform.CompareTag(TagName.expObj)
-				  || hit.transform.CompareTag(TagName.enemy))
+			Collider2D hitCol = hit.collider;
+			if(hitCol.CompareTag(TagName.enemy) 
+			|| hitCol.CompareTag(TagName.crackObj))
 			{
-				GameManager.Instance.cameraShake.ShakeForSeconds();
-				hit.transform.GetComponent<IDamageable>()?.TakeDamage(stats.attack);
+				if(hitCol.TryGetComponent<IDamageable>(out IDamageable coll))
+				{
+					coll.TakeDamage(stats.attack);  // 공격력만큼 데미지 주기
+					targetPos = startPos;
+					// TODO: 공격 이펙트
+					print($"Attack to {hit.collider.tag}");
+				}
 			}
-			else if (hit.transform.CompareTag(TagName.bullet))
+			else if(hitCol.CompareTag(TagName.door))
 			{
-				hit.transform.GetComponent<EnemyBullet>()?.DeflectBullet();
+				hit.transform.GetComponent<IInteractionObject>()?.OnInteract();
+				print($"Interact {hit.collider.tag}");
 			}
-			else if (hit.transform.CompareTag(TagName.door))
+			else if (hitCol.CompareTag(TagName.bullet))
 			{
-				hit.transform.GetComponent<IInteractionObject>().OnInteract();
+				// TODO: 총알 패링
+				print($"Parrying");
 			}
+			else
+				targetPos = startPos + dir * hit.distance;
+		}
+
+		// 공격 거리만큼 대쉬
+		while (Vector2.Distance(transform.position, targetPos) > 0.1f
+			&& stats.attackDuration > attackTimer)
+		{
+			attackTimer += Time.deltaTime;
+			float t = attackTimer;
+			transform.position = Vector3.Lerp(transform.position, targetPos, t);
+			yield return null;	// 다음 프레임까지 대기
+		}
+
+		yield return new WaitForSeconds(stats.attackCoolTime);
+		attackTimer = 0f;
+	}
+
+	private void OnDrawGizmos()
+	{
+		float maxDistance = 100f;
+
+		RaycastHit2D hit;
+
+		Vector2 startPos = transform.position;
+		Vector2 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform);
+		Vector2 dir = (mousePos - startPos).normalized;
+		Vector2 boxSize = GetComponent<BoxCollider2D>().size;
+
+		// BoxCast
+		// (중심 위치, 박스 크기, 회전 각도(z축), 방향, 거리)
+		hit = Physics2D.BoxCast(
+			transform.position,
+			boxSize,
+			transform.eulerAngles.z,
+			dir,
+			maxDistance,
+			mask
+		);
+
+		Gizmos.color = Color.red;
+
+		if (hit.collider != null)
+		{
+			Gizmos.DrawRay(
+				transform.position,
+				(Vector3)dir * hit.distance
+			);
+
+			Gizmos.DrawWireCube(
+				transform.position + (Vector3)dir * hit.distance,
+				boxSize
+			);
 		}
 		else
-			endPos = startPos + dir * stats.attackDist;
-
-			float time = 0f;
-		while (time < stats.dashDuration)
 		{
-			transform.position = Vector2.MoveTowards(
+			Gizmos.DrawRay(
 				transform.position,
-				endPos,
-				stats.attackSpeed * Time.deltaTime);
-			transform.position = Vector2.Lerp(startPos, endPos, time / stats.dashDuration);
-			time += Time.deltaTime;
-			yield return null;
+				(Vector3)dir * maxDistance
+			);
 		}
-
-		transform.position = endPos;
-		rigid.gravityScale = originalGravity;
-		yield return new WaitForSeconds(stats.attackCoolTime);
-
-		IsAttacking = false;
-		dash.enabled = true;
 	}
 }
